@@ -20,5 +20,7 @@ describe Mongoid::Associations::ClassMethods, "#references_many" do
     @car.wheels.should == @wheels
   end
 
-  # it should inflect foreign key properly
+  it "should inflect the foreign key properly" do
+    @car.wheel_ids.should == @wheels.map {|w| w.id }
+  end
 end

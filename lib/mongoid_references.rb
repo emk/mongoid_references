@@ -14,9 +14,18 @@ module Mongoid
       end
 
       def references_many(name, options = {}, &block)
-        opts = optionize(name, options, fk(name, options), &block)
+        opts = optionize(name, options, fk_plural(name, options), &block)
         associate(Associations::ReferencesMany, opts)
         field(opts.foreign_key, :type => Array)
+      end
+
+      protected
+
+      # Find a plural foreign key.  Our goal is to generate 'wheel_ids'
+      # instead of 'wheels_id'.
+      def fk_plural(name, options)
+        options[:foreign_key] ||
+          name.to_s.singularize.foreign_key.to_s.pluralize.to_sym
       end
     end
   end
