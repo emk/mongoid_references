@@ -30,4 +30,40 @@ describe Mongoid::Associations::ClassMethods, "#references_many" do
     car = Car.create!
     car.wheels.should == []
   end
+
+  describe "#<<" do
+    before do
+      @car = Car.new
+    end
+
+    it "should append a single document, saving it if necessary" do
+      @wheel = Wheel.new
+      @wheel.new_record?.should == true
+
+      @car.wheels << @wheel
+      @wheel.new_record?.should == false
+
+      @car.wheels.should == [@wheel]
+      @car.save!
+      @car.reload
+      @car.wheels.should == [@wheel]
+    end
+
+    it "should append multiple documents, saving them if necessary" do
+      @wheel1 = Wheel.create!
+      @wheel1.expects(:save).never
+      @wheel1.expects(:save!).never
+      @wheel2 = Wheel.new
+
+      @car.wheels.<<(@wheel1, [@wheel2])
+      @wheel2.new_record?.should == false
+
+      @car.wheels.should == [@wheel1, @wheel2]
+      @car.save!
+      @car.reload
+      @car.wheels.should == [@wheel1, @wheel2]
+    end
+
+    # it should append after existing items
+  end
 end
