@@ -48,7 +48,11 @@ module Mongoid
 
         # Perform an update of the relationship of the parent and child.
         def update(target, document, options)
-          document.send("#{options.foreign_key}=", target.map {|t| t.id })
+          target_ids = target.map do |t|
+            t.save! if t.new_record?
+            t.id
+          end
+          document.send("#{options.foreign_key}=", target_ids)
           instantiate(document, options, target)
         end
       end

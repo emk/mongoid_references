@@ -31,6 +31,14 @@ describe Mongoid::Associations::ClassMethods, "#references_many" do
     car.wheels.should == []
   end
 
+  it "should save wheels which are passed in at creation time if necessary" do
+    @wheel1 = Wheel.new
+    @wheel2 = Wheel.new
+    @car = Car.create!(:wheels => [@wheel1, @wheel2])
+    @car.reload
+    @car.wheels.should == [@wheel1, @wheel2]
+  end
+
   describe "#<<" do
     before do
       @car = Car.new
