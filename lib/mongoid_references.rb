@@ -16,7 +16,7 @@ module Mongoid
       def references_many(name, options = {}, &block)
         opts = optionize(name, options, fk_plural(name, options), &block)
         associate(Associations::ReferencesMany, opts)
-        field(opts.foreign_key, :type => Array)
+        field(opts.foreign_key, :type => Array, :default => [])
       end
 
       protected

@@ -7,7 +7,8 @@ module Mongoid
     class ReferencesMany < Proxy
       def initialize(document, foreign_keys, options, target = nil)
         @options = options
-        @target = target || options.klass.find(foreign_keys)
+        @target = target || (foreign_keys.empty? ? [] :
+                             options.klass.find(foreign_keys))
         extends(options)
       end
 
@@ -15,11 +16,7 @@ module Mongoid
         # Preferred method for creating the new +HasManyRelated+ association.
         def instantiate(document, options, target = nil)
           foreign_keys = document.send(options.foreign_key)
-          if foreign_keys.blank?
-            nil
-          else
-            new(document, foreign_keys, options, target)
-          end
+          new(document, foreign_keys, options, target)
         end
 
         # Returns the macro used to create the association.
@@ -29,8 +26,7 @@ module Mongoid
 
         # Perform an update of the relationship of the parent and child.
         def update(target, document, options)
-          document.send("#{options.foreign_key}=",
-                        target ? target.map {|t| t.id } : nil)
+          document.send("#{options.foreign_key}=", target.map {|t| t.id })
           instantiate(document, options, target)
         end
       end
