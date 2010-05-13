@@ -1,0 +1,4 @@
+WORK IN PROGRESS!  This doesn't do anything yet.
+
+This gem will provide implementations of references_one and references_many
+for Mongoid.
