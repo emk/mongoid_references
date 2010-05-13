@@ -72,6 +72,17 @@ describe Mongoid::Associations::ClassMethods, "#references_many" do
       @car.wheels.should == [@wheel1, @wheel2]
     end
 
-    # it should append after existing items
+    it "should append after existing items" do
+      @wheel1 = Wheel.new
+      @car = Car.create!(:wheels => [@wheel1])
+      @car.save!
+      @car.reload
+
+      @wheel2 = Wheel.new
+      @car.wheels << @wheel2
+      @car.save!
+      @car.reload
+      @car.wheels.should == [@wheel1, @wheel2]      
+    end
   end
 end
