@@ -5,6 +5,7 @@ Bundler.setup(:default, :development)
 
 require 'spec'
 require 'spec/autorun'
+require 'mocha'
 
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(File.dirname(__FILE__)), 'lib'))
